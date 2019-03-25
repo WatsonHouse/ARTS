@@ -2,7 +2,7 @@
 
 1. Algorithm
 这周只做了一道题，而且还是非常简单的题，
-
+1.1 两数之和
 https://leetcode.com/problems/two-sum/
 Given an array of integers, return indices of the two numbers such that they add up to a specific target.
 
@@ -16,11 +16,9 @@ Because nums[0] + nums[1] = 2 + 7 = 9,
 return [0, 1].
 
 
-这道题我选用了C++的方式做，主要也是想让自己熟悉起C++语言的使用，
-我选用的方法仍是暴力法，不过计划下周还是再尝试着使用别的。
+这道题我选用了C++的方式做，主要也是想让自己熟悉起C++语言的使用，我选用的方法为暴力法，不过下周计划再尝试着使用别的方法来改进。
 
-大概的想法就是遍历数组中的成员i，然后i成员之后的j成员依次相加，
-然后判断sum和target是否相等，
+a. 大概的想法就是遍历数组中的成员i，然后i成员之后的j成员依次相加，然后判断sum和target是否相等，
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
@@ -51,9 +49,8 @@ public:
     }
 };
 
-但之后考虑到，每次都要进行sum运算，并且数组大的情况下， 
-nums.at(i)和nums.at(j)的操作都会导致对数组不同位置的访问操作，
-会影响到缓存的有效性。于是我做了一些改进，改进的大概思路是， 
+但之后考虑到，每次都要进行sum运算，并且数组大的情况下， nums.at(i)和nums.at(j)的操作都会导致对数组不同位置的访问操作，会影响到缓存的有效性。
+于是我做了一些改进，改进的大概思路是， 
 	delta=target - a;
 然后用delta于数组剩余的成员进行比较。
 class Solution {
@@ -90,8 +87,7 @@ public:
 };
 
 时间和内存使用率上提升了一些，但是离高手们的差距还是不小的。 
-虽然接下来想用到map来是试一试，其大概思路就是对进来的数组进行
-排序，然后再进行比较，看看时间上是否能够提高。
+所以接下来想用到map来是试一试，其大概思路就是对进来的数组进行排序，然后再进行比较，看看时间上是否能够提高。
 
 
 2.Review 
@@ -112,8 +108,6 @@ https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/
 可以用如下命令确认。
 dmesg >> /var/log/dmesg.log 
 grep "memory" /var/log/dmesg.log 来查看里面的日志信息
-
-
 
 
 
