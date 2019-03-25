@@ -1,0 +1,140 @@
+深知人的惰性非常大，所以从自己出发，我个人的想法是即使所谓糊弄也要坚持下去，因为看似糊弄，自己也会强迫自己去了解一点东西，每次都能有所进步。
+
+1. Algorithm
+这周只做了一道题，而且还是非常简单的题，
+
+https://leetcode.com/problems/two-sum/
+Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+Example:
+
+Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+
+
+这道题我选用了C++的方式做，主要也是想让自己熟悉起C++语言的使用，
+我选用的方法仍是暴力法，不过计划下周还是再尝试着使用别的。
+
+大概的想法就是遍历数组中的成员i，然后i成员之后的j成员依次相加，
+然后判断sum和target是否相等，
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int i, j;
+        int sum=0;
+        vector<int> indices;
+        bool found = false;
+
+        for (i=0; i<nums.size(); i++) {
+            for (j=i+1; j<nums.size(); j++) {
+                sum = nums.at(i) + nums.at(j);
+                if (sum == target) {
+                    found = true;
+                    break;
+                }                    
+            }
+            if (found)
+                break;
+        }
+        if (found) {
+            indices.push_back(i);
+            indices.push_back(j);                       
+        } else {
+            indices.push_back(-1);
+            indices.push_back(-1);
+        }
+        return indices;
+    }
+};
+
+但之后考虑到，每次都要进行sum运算，并且数组大的情况下， 
+nums.at(i)和nums.at(j)的操作都会导致对数组不同位置的访问操作，
+会影响到缓存的有效性。于是我做了一些改进，改进的大概思路是， 
+	delta=target - a;
+然后用delta于数组剩余的成员进行比较。
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int i, j;
+        int a;
+        int delta;
+        int sum=0;
+        vector<int> indices;
+        bool found = false;
+
+        for (i=0; i<nums.size(); i++) {
+            a = nums.at(i);
+            delta = target - a;
+            for (j=i+1; j<nums.size(); j++) {                
+                if (delta == nums.at(j)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found)
+                break;
+        }
+        if (found) {
+            indices.push_back(i);
+            indices.push_back(j);                       
+        } else {
+            indices.push_back(-1);
+            indices.push_back(-1);
+        }
+        return indices;
+    }
+};
+
+时间和内存使用率上提升了一些，但是离高手们的差距还是不小的。 
+虽然接下来想用到map来是试一试，其大概思路就是对进来的数组进行
+排序，然后再进行比较，看看时间上是否能够提高。
+
+
+2.Review 
+我分享的是joel spolsky的文章
+https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/
+首先来说， joel的博客对人的启发很大，里面还有很多的有意义的观点，从软件工程管理，
+以及创业等，都是蛮有意思的。
+这篇文章提到netscape的犯下了一个战略性的严重错误， 就是从头重写代码。而由于这一举动
+导致公司的软件产品因为发布的延迟而导致失去市场。
+然后他接着分析为什么人们会犯下这种错误的一个深层次原因，”阅读代码比写代码更难“（真是
+说到人的心坎上了）。然后他分析为什么不要轻易丢掉代码，旧代码虽然混乱，但是那是前面
+很多工程师花费的时间和钱来修改某个现实世界的出现的问题，而我们接手代码的人只是想当然
+地推倒重来，等于公司之前的积累几乎都白费了。
+
+
+3.Tips
+当自己调试一个程序时，有时怀疑改程序是否是因为内存不足挂掉的（在嵌入式设备经常会遇到）,
+可以用如下命令确认。
+dmesg >> /var/log/dmesg.log 
+grep "memory" /var/log/dmesg.log 来查看里面的日志信息
+
+
+
+
+
+4. Share
+4.1 
+在Windows 7下刚开始安装使用vagrant时， 会碰到如下提示
+The Hyper-V cmdlets for PowerShell are not available! Vagrant
+requires these to control Hyper-V. Please enable them in the
+"Windows Features" control panel and try again.			
+然后我一开始就想着如何去安装Hyper-V，但是都不管用，最后我还是安装Virtual Box，然后
+就发现Vagrant使用Virtual Box启动我下载的虚拟机了。 
+
+4.2 
+然后vagrant up机器的时候，又遇到超时，这时候，建议在vagrant file里添加上如下语句
+  config.vm.provider "virtualbox" do |vb|
+     # Display the VirtualBox GUI when booting the machine
+     vb.gui = true
+  
+     # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
+  end
+如此可以看看virtual box在打开虚拟机时，碰到了什么问题。我这边的问题就是64位虚拟器
+在启动时报没有VT-d的支持，于是我又重进Bios开启了VT-d的支持，这个64位的虚拟机才能
+正常运行起来。
